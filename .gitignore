@@ -8,3 +8,4 @@ build/
 .ruff_cache/
 workspace/
 .DS_Store
+hepabench_runs/

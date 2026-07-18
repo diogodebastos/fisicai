@@ -52,14 +52,53 @@ fisicai is built on the [Claude Agent SDK](https://code.claude.com/docs/en/agent
 your existing Claude Code credentials (`claude` CLI login or `ANTHROPIC_API_KEY`). Select a
 model with `--model` or `FISICAI_MODEL`.
 
+## Use it from the agent you already have (MCP)
+
+The tools are also exposed as a standard [MCP](https://modelcontextprotocol.io) server —
+vendor-neutral, works with Claude Code, Cursor, opencode, LangChain adapters, or any other
+MCP client:
+
+```console
+$ claude mcp add fisicai -- fisicai-mcp        # Claude Code
+```
+
+or in any MCP client config:
+
+```json
+{ "mcpServers": { "fisicai": { "command": "fisicai-mcp" } } }
+```
+
+Your agent then has `inspire_search`, `arxiv_fetch`, `hepdata_get`,
+`hepdata_download_likelihood`, `pyhf_list_patches`, and `pyhf_cls`.
+
+## HEPAnalysisBench (HEPAbench)
+
+How do you trust an AI with physics? You score it against results that are already known.
+**HEPAbench** is a benchmark of analysis tasks with published reference answers — from a
+toy-workspace CLs fit to reproducing a real ATLAS exclusion from its published likelihood.
+The scorer is harness-agnostic: any agent that writes an `answer.json` can be benchmarked.
+
+```console
+$ hepabench list
+$ hepabench run --offline        # tasks that need no network
+$ hepabench run                  # the full suite, driven by the fisicai agent
+$ hepabench score toy_cls answer.json   # score any agent's answer
+```
+
+Contributing a task = one YAML file with a prompt and a published reference value
+(`src/fisicai/hepabench/tasks/`). Tasks that agents fail are the most valuable ones.
+
 ## Roadmap
 
 - **M1 — Literature agent**: end-to-end INSPIRE/arXiv research tasks. *(done)*
 - **M2 — Reinterpretation**: reproduce a published ATLAS exclusion point from its HEPData
   likelihood — an objective, physics-grade correctness check. *(done — see
   [examples/reinterpret_sbottom.md](examples/reinterpret_sbottom.md))*
-- **M3 — Community**: recast scans over patchsets, CMS Open Data workflows, more skills,
-  simplified-likelihood support, and whatever the reinterpretation community asks for first.
+- **M3 — Community**: grow HEPAbench (CMS Open Data cutflow tasks, more published
+  likelihoods), recast scans over patchsets, simplified-likelihood support, and whatever
+  the reinterpretation community asks for first.
+- **Beyond**: the simulation chain for reinterpreting *new* models (MadGraph → fast sim →
+  efficiency maps → patched likelihoods), and new results on new data.
 
 ## The north star
 

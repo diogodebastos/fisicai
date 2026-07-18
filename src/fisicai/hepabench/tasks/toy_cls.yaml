@@ -1,0 +1,13 @@
+id: toy_cls
+title: CLs on a two-bin toy workspace (offline)
+network: false
+assets: toy_cls
+tags: [statistics, pyhf, offline]
+prompt: |
+  The file BkgOnly.json in your working directory contains a pyhf workspace: a two-bin
+  single-channel counting experiment with a signal normfactor named 'mu' and an
+  uncorrelated background uncertainty. Compute the observed CLs for signal strength
+  mu = 1.0 using the qtilde test statistic.
+answer_keys: [cls_obs]
+reference:
+  cls_obs: {value: 0.0525, abs_tol: 0.003}

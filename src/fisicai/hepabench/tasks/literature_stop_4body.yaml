@@ -1,0 +1,11 @@
+id: literature_stop_4body
+title: Find the latest CMS four-body stop search (literature)
+network: true
+tags: [literature, inspire]
+prompt: |
+  Find the latest published CMS search for top squark pair production in the four-body
+  decay mode with a single lepton, using the full LHC Run 2 dataset. Report its arXiv
+  identifier.
+answer_keys: [arxiv_id]
+reference:
+  arxiv_id: {equals: "2301.08096"}

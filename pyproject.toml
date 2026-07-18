@@ -20,12 +20,14 @@ classifiers = [
 ]
 dependencies = [
     "claude-agent-sdk>=0.2",
+    "mcp>=1.0",
     "httpx>=0.27",
     "pyhf[contrib]>=0.7.6",
     "uproot>=5",
     "awkward>=2",
     "hist>=2",
     "matplotlib>=3.8",
+    "pyyaml>=6",
 ]
 
 [project.optional-dependencies]
@@ -33,6 +35,8 @@ dev = ["pytest>=8", "ruff>=0.4"]
 
 [project.scripts]
 fisicai = "fisicai.cli:main"
+fisicai-mcp = "fisicai.mcp_server:main"
+hepabench = "fisicai.hepabench.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/diogodebastos/fisicai"

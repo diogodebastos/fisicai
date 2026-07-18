@@ -1,0 +1,13 @@
+id: atlas_multib_cls
+title: Reproduce ATLAS SUSY-2018-31 CLs from the published likelihood
+network: true
+tags: [reinterpretation, pyhf, hepdata, atlas]
+prompt: |
+  Download the published pyhf likelihood of the ATLAS sbottom multi-b search (INSPIRE
+  record 1748602) from HEPData. Using the Region A statistical model, compute the
+  observed CLs for the signal patch sbottom_1300_205_60 at signal strength mu = 1.0,
+  and state whether that point is excluded at 95% CL in Region A.
+answer_keys: [cls_obs, excluded]
+reference:
+  cls_obs: {value: 0.24444, abs_tol: 0.005}
+  excluded: {equals: false}
