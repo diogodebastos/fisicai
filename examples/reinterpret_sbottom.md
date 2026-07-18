@@ -33,20 +33,20 @@ print(get_record(1748602))
 # 2. Download and extract it (RegionA/B/C, each with BkgOnly.json + patchset.json):
 download_likelihood(
     "https://www.hepdata.net/record/resource/1935437?view=true",
-    "workspace/sbottom_1Lbb",
+    "workspace/sbottom_multib",
 )
 
 # 3. Signal points are patches named sbottom_<msb>_<mn2>_<mn1>:
-print(list_patches("workspace/sbottom_1Lbb/RegionA"))
+print(list_patches("workspace/sbottom_multib/RegionA"))
 
 # 4. Fit:
-print(compute_cls("workspace/sbottom_1Lbb/RegionA", patch_name="sbottom_1300_205_60"))
+print(compute_cls("workspace/sbottom_multib/RegionA", patch_name="sbottom_1300_205_60"))
 ```
 
 ## Result
 
 ```
-Workspace: workspace/sbottom_1Lbb/RegionA/BkgOnly.json + patch 'sbottom_1300_205_60'
+Workspace: workspace/sbottom_multib/RegionA/BkgOnly.json + patch 'sbottom_1300_205_60'
 POI (signal strength mu) = 1.0
 CLs observed = 0.24444  -> not excluded at 95% CL
 CLs expected band (-2s, -1s, median, +1s, +2s) = 0.09022, 0.19378, 0.38432, 0.65577, 0.89104
