@@ -85,6 +85,9 @@ $ hepabench run                  # the full suite, driven by the fisicai agent
 $ hepabench score toy_cls answer.json   # score any agent's answer
 ```
 
+Current v0 suite (3 tasks: toy CLs fit, INSPIRE retrieval, ATLAS SUSY-2018-31 CLs
+reproduction): the fisicai agent scores **3/3**.
+
 Contributing a task = one YAML file with a prompt and a published reference value
 (`src/fisicai/hepabench/tasks/`). Tasks that agents fail are the most valuable ones.
 
