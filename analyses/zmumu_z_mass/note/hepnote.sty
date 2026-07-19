@@ -1,0 +1,51 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{hepnote}[2026/07/19 fisicai HEP analysis note style]
+
+\RequirePackage[a4paper,margin=2.5cm]{geometry}
+\RequirePackage{graphicx}
+\RequirePackage{booktabs}
+\RequirePackage{amsmath}
+\RequirePackage{siunitx}
+\RequirePackage{xspace}
+\RequirePackage{xcolor}
+\RequirePackage[colorlinks=true,linkcolor=blue!40!black,citecolor=blue!40!black,%
+urlcolor=blue!40!black]{hyperref}
+
+% ---- units (upright, thin space, as in experiment publications) ----
+\newcommand{\GeV}{\ensuremath{\,\text{Ge\hspace{-.08em}V}}\xspace}
+\newcommand{\MeV}{\ensuremath{\,\text{Me\hspace{-.08em}V}}\xspace}
+\newcommand{\TeV}{\ensuremath{\,\text{Te\hspace{-.08em}V}}\xspace}
+\newcommand{\fbinv}{\ensuremath{\,\text{fb}^{-1}}\xspace}
+
+% ---- kinematics ----
+\newcommand{\pt}{\ensuremath{p_{\mathrm{T}}}\xspace}
+\newcommand{\ptmiss}{\ensuremath{p_{\mathrm{T}}^{\text{miss}}}\xspace}
+\newcommand{\abseta}{\ensuremath{|\eta|}\xspace}
+\newcommand{\sqs}{\ensuremath{\sqrt{s}}\xspace}
+\newcommand{\stat}{\ensuremath{\,\text{(stat)}}\xspace}
+\newcommand{\syst}{\ensuremath{\,\text{(syst)}}\xspace}
+
+% ---- common final states ----
+\newcommand{\mmumu}{\ensuremath{m_{\mu\mu}}\xspace}
+\newcommand{\mll}{\ensuremath{m_{\ell\ell}}\xspace}
+\newcommand{\Zmm}{\ensuremath{\mathrm{Z}\to\mu^{+}\mu^{-}}\xspace}
+\newcommand{\CLs}{\ensuremath{\mathrm{CL_s}}\xspace}
+
+% ---- note header ----
+% \notenumber{AN-2026-01} before \maketitle to print a preprint-style tag.
+% \makenoteheader hooks the tag into \maketitle's title block (typesetting it
+% directly before \maketitle would trigger \maketitle's internal \newpage and
+% strand the tag on its own page).
+\newcommand{\fisicai@notenumber}{}
+\newcommand{\notenumber}[1]{\renewcommand{\fisicai@notenumber}{#1}}
+\newcommand{\makenoteheader}{%
+  \let\fisicai@orig@maketitle\@maketitle
+  \def\@maketitle{%
+    \newpage
+    \begin{flushright}\ttfamily\small
+      fisicai analysis note\\
+      \fisicai@notenumber
+    \end{flushright}\vspace{-1em}%
+    % article's \@maketitle starts with its own \newpage, which would strand
+    % the tag on its own page; disable it for this call only.
+    \begingroup\let\newpage\relax\fisicai@orig@maketitle\endgroup}}

@@ -29,6 +29,8 @@ dependencies = [
     "aiohttp>=3.9",
     "hist>=2",
     "matplotlib>=3.8",
+    "mplhep>=1",
+    "scipy>=1.11",
     "pyyaml>=6",
 ]
 

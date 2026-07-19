@@ -22,6 +22,7 @@ from scipy.special import voigt_profile
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import mplhep
 
 from fisicai.hepabench import DATA_DIR  # noqa: E402  (skim ships with the package)
 
@@ -124,44 +125,39 @@ def run_fit(counts, centers, fit_lo, fit_hi):
     return popt, perr, chi2, ndf
 
 
-def make_figure(h, popt, m_peak, outpath):
+def make_figure(h, popt, outpath):
+    plt.style.use(mplhep.style.CMS)
     counts = h.values()
     centers = h.axes[0].centers
     errors = np.sqrt(counts)
     model = make_model(FIT_LO, FIT_HI)
 
-    fig, ax = plt.subplots(figsize=(6.4, 4.4))
-    ax.errorbar(
-        centers, counts, yerr=errors, fmt="o", ms=3, lw=1, color="black",
-        label="Data", zorder=3,
-    )
+    fig, ax = plt.subplots()
     m_fine = np.linspace(FIT_LO, FIT_HI, 400)
     ax.plot(
-        m_fine, model(m_fine, *popt), color="#2c7fb8", lw=2,
+        m_fine, model(m_fine, *popt), color="#e42536", lw=2,
         label="Voigtian + exp. fit", zorder=2,
     )
     bkg_only = model(m_fine, 0.0, popt[1], popt[2], popt[3], popt[4])
     ax.plot(
-        m_fine, bkg_only, color="#999999", lw=1.5, ls="--",
+        m_fine, bkg_only, color="#5790fc", lw=2, ls="--",
         label="Background component", zorder=1,
     )
-    ax.axvline(m_peak, color="#d95f0e", lw=1.5, ls=":", zorder=1)
-    ax.annotate(
-        f"peak = {m_peak:.2f} GeV",
-        xy=(m_peak, ax.get_ylim()[1] * 0.72),
-        xytext=(m_peak + 7, ax.get_ylim()[1] * 0.8),
-        arrowprops=dict(arrowstyle="->", color="#d95f0e"),
-        color="#d95f0e", fontsize=10,
+    ax.errorbar(
+        centers, counts, yerr=errors, fmt="o", color="black", ms=5, lw=1.2,
+        label="Data", zorder=3,
     )
     ax.set_xlabel(r"$m_{\mu\mu}$ [GeV]")
     ax.set_ylabel(f"Events / {(M_HI - M_LO) / N_BINS:.1f} GeV")
     ax.set_xlim(M_LO, M_HI)
     ax.set_ylim(bottom=0)
-    ax.legend(frameon=False)
-    ax.grid(alpha=0.25, lw=0.5)
-    ax.set_title("CMS Open Data 2012, DoubleMuParked skim", fontsize=11)
-    fig.tight_layout()
-    fig.savefig(outpath)
+    handles, labels = ax.get_legend_handles_labels()
+    order = [labels.index(name) for name in
+             ("Data", "Voigtian + exp. fit", "Background component")]
+    ax.legend([handles[i] for i in order], [labels[i] for i in order],
+              loc="upper left")
+    mplhep.cms.label("Open Data", data=True, rlabel="2012 (8 TeV)", ax=ax)
+    fig.savefig(outpath, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -197,7 +193,7 @@ def main():
               f"(shift {popt_v[1] - m_peak:+.3f}), chi2/ndf={chi2_v / ndf_v:.2f}")
     syst_range = float(np.max(np.abs(shifts)))
 
-    make_figure(h, popt, m_peak, outdir / "figures" / "dimuon_mass.pdf")
+    make_figure(h, popt, outdir / "figures" / "dimuon_mass.pdf")
 
     delta = m_peak - M_Z_PDG
     results = {

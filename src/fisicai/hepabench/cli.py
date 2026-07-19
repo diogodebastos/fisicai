@@ -7,7 +7,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from fisicai.hepabench import Check, Task, load_tasks, score_answer
+from fisicai.hepabench import Check, Task, load_tasks, score_answer, task_score
 
 ANSWER_INSTRUCTIONS = (
     "\n\nWhen you are finished, write a file named answer.json in your working directory "
@@ -72,6 +72,7 @@ def main() -> None:
         for c in checks:
             mark = "PASS" if c.passed else "FAIL"
             print(f"  [{mark}] {c.key}: {c.got}")
+        print(f"  bundle score: {task_score(checks):.3f}")
         sys.exit(0 if all(c.passed for c in checks) else 1)
 
     if args.command == "run":
@@ -136,20 +137,27 @@ async def _run_task(task: Task, model: str | None, runs_dir: Path) -> list[Check
 def _print_checks(task: Task, checks: list[Check]) -> None:
     for c in checks:
         mark = "PASS" if c.passed else "FAIL"
-        print(f"  [{mark}] {c.key}: expected {c.expected}, got {c.got}")
+        print(f"  [{mark}] {c.key}: expected {c.expected}, got {c.got} (score {c.score:.3f})")
 
 
 def _print_summary(results: list[tuple[Task, list[Check] | Exception]]) -> bool:
     print("\n=== HEPAbench summary ===")
     any_failed = False
+    total = 0.0
     for task, outcome in results:
         if isinstance(outcome, Exception):
-            status, any_failed = f"ERROR ({outcome})", True
-        elif all(c.passed for c in outcome):
-            status = "PASS"
+            status, score, any_failed = f"ERROR ({outcome})", 0.0, True
         else:
-            status, any_failed = "FAIL", True
-        print(f"  {task.id:24} {status}")
+            score = task_score(outcome)
+            if all(c.passed for c in outcome):
+                status = "PASS"
+            else:
+                status, any_failed = "FAIL", True
+        total += score
+        print(f"  {task.id:24} {status:6} {score:.3f}")
+    n = len(results)
+    if n:
+        print(f"\n  HEPAbench score: {total:.3f} / {n} ({100 * total / n:.1f}%)")
     return any_failed
 
 

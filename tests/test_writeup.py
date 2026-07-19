@@ -1,6 +1,16 @@
 import pytest
 
-from fisicai.writeup import format_value, macro_name, results_to_tex
+from fisicai.writeup import format_value, init_note, macro_name, results_to_tex
+
+
+def test_init_note_copies_template(tmp_path):
+    written = init_note(tmp_path / "note")
+    assert {p.name for p in written} == {"note.tex", "hepnote.sty"}
+    note = (tmp_path / "note/note.tex").read_text()
+    assert "\\usepackage{hepnote}" in note
+    assert "Systematic uncertainties" in note
+    with pytest.raises(FileExistsError):
+        init_note(tmp_path / "note")
 
 
 def test_macro_names():

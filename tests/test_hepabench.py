@@ -1,7 +1,26 @@
 import json
 
-from fisicai.hepabench import load_tasks, score_answer
+import pytest
+
+from fisicai.hepabench import load_tasks, score_answer, task_score
 from fisicai.tools.pyhf_tools import compute_cls
+
+
+def test_scores_are_continuous():
+    task = load_tasks()["toy_cls"]  # reference 0.0525 +- 0.003
+    exact = score_answer(task, {"cls_obs": 0.0525})[0]
+    at_tol = score_answer(task, {"cls_obs": 0.0555})[0]
+    beyond = score_answer(task, {"cls_obs": 0.0625})[0]
+    missing = score_answer(task, {})[0]
+    assert exact.score == pytest.approx(1.0)
+    assert at_tol.passed and at_tol.score == pytest.approx(0.5)
+    assert not beyond.passed and beyond.score == 0.0
+    assert missing.score == 0.0
+    # closer answers always score higher — the property that makes it maximizable
+    closer = score_answer(task, {"cls_obs": 0.0530})[0]
+    farther = score_answer(task, {"cls_obs": 0.0545})[0]
+    assert closer.score > farther.score
+    assert task_score([exact, at_tol]) == pytest.approx(0.75)
 
 
 def test_tasks_load_and_are_well_formed():

@@ -92,6 +92,50 @@ def pyhf_cls(workspace_dir: str, patch_name: str = "", poi_value: float = 1.0) -
     )
 
 
+@mcp.tool()
+def writeup_macros(results_json: str, out_tex: str) -> str:
+    """Generate LaTeX \\newcommand macros from a results.json file.
+
+    Enforces the analysis-bundle rule that notes never hand-type physics numbers:
+    every value in results_json becomes a macro (m_z_peak -> \\MZPeak) written to
+    out_tex, which the note includes via \\input.
+    """
+    import json
+
+    from fisicai.writeup import results_to_tex
+
+    with open(results_json) as f:
+        tex = results_to_tex(json.load(f))
+    with open(out_tex, "w") as f:
+        f.write(tex)
+    return f"Wrote {tex.count(chr(92) + 'newcommand')} macros to {out_tex}"
+
+
+@mcp.tool()
+def note_template(dest_dir: str) -> str:
+    """Copy the HEP analysis-note LaTeX template (note.tex skeleton + hepnote.sty with
+    \\pt/\\GeV/\\stat-style macros) into dest_dir. Structure mirrors experiment
+    publications: Introduction, Detector and data, Event selection, Method,
+    Systematic uncertainties, Results, Summary."""
+    from fisicai.writeup import init_note
+
+    written = init_note(dest_dir)
+    return "Wrote: " + ", ".join(str(p) for p in written)
+
+
+@mcp.tool()
+def bundle_validate(bundle_dir: str, run: bool = True, compile_pdf: bool = True) -> str:
+    """Validate an analysis bundle: layout, reproducibility (rerun analysis.py in a
+    clean copy and require identical results.json), macros in sync, no hand-typed
+    result values in the note, citations resolve, and the note compiles."""
+    from fisicai.hepabench.bundle import validate_bundle
+
+    checks = validate_bundle(bundle_dir, run=run, compile_pdf=compile_pdf)
+    lines = [f"[{'PASS' if c.passed else 'FAIL'}] {c.key}: {c.got}" for c in checks]
+    verdict = "VALID" if all(c.passed for c in checks) else "INVALID"
+    return f"Bundle {bundle_dir}: {verdict}\n" + "\n".join(lines)
+
+
 def main() -> None:
     mcp.run()
 

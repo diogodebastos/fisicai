@@ -77,8 +77,10 @@ or in any MCP client config:
 { "mcpServers": { "fisicai": { "command": "fisicai-mcp" } } }
 ```
 
-Your agent then has `inspire_search`, `arxiv_fetch`, `hepdata_get`,
-`hepdata_download_likelihood`, `pyhf_list_patches`, and `pyhf_cls`.
+Your agent then has `inspire_search`, `inspire_bibtex`, `arxiv_fetch`, `hepdata_get`,
+`hepdata_download_likelihood`, `pyhf_list_patches`, `pyhf_cls` — plus the write-up
+machinery: `note_template`, `writeup_macros`, and `bundle_validate`, so any MCP client
+can produce and validate full analysis bundles, not just query data.
 
 ## Analysis bundles: the code *and* the paper
 
@@ -110,6 +112,12 @@ macros; citations come from INSPIRE's own BibTeX; rerunning `analysis.py` regene
 whole artifact. See [analyses/zmumu_z_mass](analyses/zmumu_z_mass) for a complete example
 produced by the agent.
 
+Notes follow experiment-publication conventions: a shipped LaTeX template
+(`python -m fisicai.writeup --init-note note/`) with the canonical section structure
+(Introduction / Detector and data / Event selection / Method / Systematic uncertainties /
+Results / Summary), `hepnote.sty` macros (`\pt`, `\GeV`, `\stat`/`\syst`, …), and
+`mplhep`-styled figures.
+
 ## HEPAnalysisBench (HEPAbench)
 
 How do you trust an AI with physics? You score it against results that are already known.
@@ -130,6 +138,12 @@ $ hepabench validate analyses/zmumu_z_mass   # validate an analysis bundle
 `results.json`, checks that `results.tex` regenerates from it, that no result value is
 hand-typed in the note, that every citation resolves, and that the note compiles from
 scratch. The shipped Z-mass bundle passes all six checks.
+
+Every check carries a **continuous score in [0, 1]** — numeric answers earn more the
+closer they land to the reference (1.0 exact, 0.5 at the tolerance edge, 0 beyond twice
+the tolerance) — and the suite reports one aggregate number. That makes HEPAbench a
+target function: harnesses, models, and prompts can be optimized against it, and
+improvements show up as score, not anecdotes.
 
 Current v0 suite — the fisicai agent scores **4/4**:
 

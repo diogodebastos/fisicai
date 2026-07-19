@@ -17,8 +17,12 @@ rendered exactly as stored — round numbers to the intended precision in ``anal
 import argparse
 import json
 import re
+import shutil
 import sys
+from pathlib import Path
 from typing import Any
+
+TEMPLATE_DIR = Path(__file__).parent / "templates"
 
 
 def macro_name(key: str) -> str:
@@ -59,11 +63,41 @@ def results_to_tex(results: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def init_note(dest_dir: str | Path) -> list[Path]:
+    """Copy the HEP note template (note.tex skeleton + hepnote.sty) into ``dest_dir``."""
+    dest = Path(dest_dir)
+    dest.mkdir(parents=True, exist_ok=True)
+    written = []
+    for src, name in [
+        (TEMPLATE_DIR / "note_template.tex", "note.tex"),
+        (TEMPLATE_DIR / "hepnote.sty", "hepnote.sty"),
+    ]:
+        target = dest / name
+        if target.exists():
+            raise FileExistsError(f"{target} already exists; not overwriting")
+        shutil.copyfile(src, target)
+        written.append(target)
+    return written
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("results_json", help="Path to results.json")
+    parser.add_argument("results_json", nargs="?", help="Path to results.json")
     parser.add_argument("--out", default=None, help="Output .tex path (default: stdout)")
+    parser.add_argument(
+        "--init-note",
+        metavar="DIR",
+        default=None,
+        help="Copy the HEP note template (note.tex + hepnote.sty) into DIR and exit.",
+    )
     args = parser.parse_args()
+
+    if args.init_note:
+        for path in init_note(args.init_note):
+            print(f"wrote {path}")
+        return
+    if not args.results_json:
+        parser.error("results_json is required unless --init-note is given")
 
     with open(args.results_json) as f:
         tex = results_to_tex(json.load(f))

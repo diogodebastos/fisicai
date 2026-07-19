@@ -10,6 +10,9 @@ EXPECTED_TOOLS = {
     "hepdata_download_likelihood",
     "pyhf_list_patches",
     "pyhf_cls",
+    "writeup_macros",
+    "note_template",
+    "bundle_validate",
 }
 
 

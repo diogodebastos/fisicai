@@ -30,14 +30,24 @@ Non-negotiable rules:
    External values you compare to (e.g. PDG averages) are *comparisons*, not results:
    name them in prose with a citation, and if you must quote the number, put it in
    `results.json` too (e.g. `m_z_pdg`) so rule 1 still holds.
-4. **State the analysis like a physicist.** The note has: abstract, introduction (one
-   paragraph, cited), data description, event selection (as a table where non-trivial),
-   method, result with uncertainty discussion (statistical at minimum; name what
-   systematics are *not* evaluated), a figure of the key distribution, and a short
-   conclusion. Claim only what the analysis supports; call it an "analysis note", not a
-   measurement claiming precision it doesn't have.
-5. **Verify before finishing:** run `analysis.py` fresh, regenerate `results.tex`, compile
+4. **Write it like an experiment publication.** Start from the shipped template:
+   `python -m fisicai.writeup --init-note note/` (gives `note.tex` + `hepnote.sty`).
+   Structure mirrors CMS/ATLAS papers: Introduction — Detector and data — Event
+   selection (cutflow as a booktabs table) — Analysis method — Systematic
+   uncertainties (its own section: what is evaluated and, explicitly, what is not) —
+   Results — Summary. Claim only what the analysis supports; it is an "analysis note",
+   not a measurement claiming precision it doesn't have.
+5. **HEP typography.** Use the `hepnote.sty` macros — `\pt`, `\abseta`, `\GeV`, `\sqs`,
+   `\stat`/`\syst`, `\mmumu`, `\CLs` — never ad-hoc math like `$p_T$` or `$|eta|$`.
+   Uncertainties as `\MZPeak \pm \MZPeakStat \stat \pm \MZPeakSyst \syst \GeV`.
+   Selection cuts are results too: quote them via macros (`\PtMin`, `\EtaMax`).
+6. **HEP figures.** Use `mplhep`: `plt.style.use(mplhep.style.CMS)`, data as black
+   points with error bars, fit as a curve, axis labels with units and bin width
+   ("Events / 0.5 GeV"), and `mplhep.cms.label(..., rlabel=...)` with an honest label
+   (e.g. "Open Data") — never the bare experiment label, which would imply an official
+   result. Vector PDF output.
+7. **Verify before finishing:** run `analysis.py` fresh, regenerate `results.tex`, compile
    with tectonic, and confirm the PDF exists and the numbers in it match `results.json`.
+   `hepabench validate <bundle-dir>` checks all of this — run it if available.
 
-LaTeX conventions: `\documentclass[11pt]{article}` with `graphicx`, `booktabs`, `siunitx`,
-`hyperref`; cite with `\cite{...}` + BibTeX. Keep it to 3–6 pages.
+Keep the note to 3–6 pages.
