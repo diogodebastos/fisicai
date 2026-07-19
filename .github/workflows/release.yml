@@ -1,0 +1,28 @@
+name: Release
+
+# Publishes to PyPI via trusted publishing (no API token in secrets).
+# One-time setup on pypi.org: Account -> Publishing -> add a "pending publisher"
+# for project `fisicai`, owner `diogodebastos`, repo `fisicai`,
+# workflow `release.yml`, environment `pypi`.
+# Then: git tag vX.Y.Z && git push origin vX.Y.Z
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  pypi:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build sdist and wheel
+        run: pipx run build
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
