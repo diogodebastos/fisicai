@@ -41,8 +41,11 @@ urlcolor=blue!40!black]{hyperref}
 \newcommand{\makenoteheader}{%
   \let\fisicai@orig@maketitle\@maketitle
   \def\@maketitle{%
+    \newpage
     \begin{flushright}\ttfamily\small
       fisicai analysis note\\
       \fisicai@notenumber
     \end{flushright}\vspace{-1em}%
-    \fisicai@orig@maketitle}}
+    % article's \@maketitle starts with its own \newpage, which would strand
+    % the tag on its own page; disable it for this call only.
+    \begingroup\let\newpage\relax\fisicai@orig@maketitle\endgroup}}
