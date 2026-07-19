@@ -32,6 +32,16 @@ def inspire_search(query: str, size: int = 5, sort: str = "mostrecent") -> str:
 
 
 @mcp.tool()
+def inspire_bibtex(identifier: str) -> str:
+    """Fetch the official BibTeX entry for a paper from INSPIRE-HEP.
+
+    Accepts an INSPIRE record id (e.g. 1748602) or arXiv id (e.g. 2301.08096).
+    Always use this for bibliography entries — never write BibTeX by hand.
+    """
+    return inspire.fetch_bibtex(identifier)
+
+
+@mcp.tool()
 def arxiv_fetch(arxiv_id: str, section: str = "abstract") -> str:
     """Fetch an arXiv paper.
 

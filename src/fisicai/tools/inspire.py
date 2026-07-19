@@ -6,6 +6,8 @@ import httpx
 from claude_agent_sdk import tool
 
 API_URL = "https://inspirehep.net/api/literature"
+BIBTEX_RECORD_URL = "https://inspirehep.net/api/literature/{recid}"
+BIBTEX_ARXIV_URL = "https://inspirehep.net/api/arxiv/{arxiv_id}"
 USER_AGENT = "fisicai (https://github.com/diogodebastos/fisicai)"
 FIELDS = (
     "titles,authors.full_name,collaborations,arxiv_eprints,abstracts,"
@@ -78,6 +80,29 @@ def _format_hit(meta: dict[str, Any]) -> str:
     return f"{header}\n  {abstract}" if abstract else header
 
 
+def fetch_bibtex(identifier: str, client: httpx.Client | None = None) -> str:
+    """Fetch the official INSPIRE BibTeX entry for a record id or arXiv id."""
+    ident = identifier.strip().removeprefix("arXiv:").removeprefix("ins")
+    if "." in ident or "/" in ident:
+        url = BIBTEX_ARXIV_URL.format(arxiv_id=ident)
+    else:
+        url = BIBTEX_RECORD_URL.format(recid=ident)
+
+    own_client = client is None
+    client = client or httpx.Client(
+        timeout=30, headers={"User-Agent": USER_AGENT}, follow_redirects=True
+    )
+    try:
+        resp = client.get(url, params={"format": "bibtex"})
+        if resp.status_code == 404:
+            return f"No INSPIRE record found for identifier {identifier!r}"
+        resp.raise_for_status()
+        return resp.text.strip()
+    finally:
+        if own_client:
+            client.close()
+
+
 @tool(
     "inspire_search",
     "Search the INSPIRE-HEP literature database for high-energy physics papers. "
@@ -95,4 +120,15 @@ async def inspire_search(args: dict[str, Any]) -> dict[str, Any]:
     return {"content": [{"type": "text", "text": text}]}
 
 
-TOOLS = [inspire_search]
+@tool(
+    "inspire_bibtex",
+    "Fetch the official BibTeX entry for a paper from INSPIRE-HEP, by INSPIRE record id "
+    "(e.g. 1748602) or arXiv id (e.g. 2301.08096). Always use this for references.bib "
+    "entries — never write BibTeX by hand.",
+    {"identifier": str},
+)
+async def inspire_bibtex(args: dict[str, Any]) -> dict[str, Any]:
+    return {"content": [{"type": "text", "text": fetch_bibtex(args["identifier"])}]}
+
+
+TOOLS = [inspire_search, inspire_bibtex]

@@ -17,13 +17,30 @@ from fisicai.agent import DEFAULT_MODEL, build_options
 
 BANNER = "fisicai — agentic harness for high-energy physics"
 
+ANALYZE_PROMPT = (
+    "Produce a complete, reproducible analysis bundle in your current working directory, "
+    "following the analysis-writeup skill exactly: analysis.py, results/results.json, "
+    "results/results.tex generated with `python -m fisicai.writeup`, figures/, and "
+    "note/note.tex compiled to note.pdf with tectonic, with references.bib entries "
+    "fetched via inspire_bibtex, plus a README.md with regeneration instructions. "
+    "Verify the bundle end-to-end before finishing.\n\nAnalysis task: {task}"
+)
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(prog="fisicai", description=BANNER)
     parser.add_argument(
         "task",
         nargs="*",
-        help="Task for the agent, or 'chat' for an interactive session.",
+        help=(
+            "Task for the agent; 'chat' for an interactive session; "
+            "'analyze <task>' to produce a full analysis bundle (code + LaTeX note)."
+        ),
+    )
+    parser.add_argument(
+        "--name",
+        default=None,
+        help="Bundle name for 'analyze' (directory under ./analyses/; default: derived).",
     )
     parser.add_argument("--model", default=None, help=f"Model to use (default: {DEFAULT_MODEL})")
     parser.add_argument(
@@ -36,12 +53,30 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    if args.task and args.task[0] == "analyze":
+        task = " ".join(args.task[1:])
+        if not task:
+            parser.error("'analyze' needs a task, e.g. fisicai analyze \"measure ...\"")
+        name = args.name or _slugify(task)
+        workdir = args.workdir or f"analyses/{name}"
+        options = build_options(model=args.model, workdir=workdir, yolo=args.yolo)
+        print(f"[analysis bundle -> {workdir}]", file=sys.stderr)
+        asyncio.run(run_task(ANALYZE_PROMPT.format(task=task), options))
+        return
+
     options = build_options(model=args.model, workdir=args.workdir, yolo=args.yolo)
 
     if not args.task or args.task == ["chat"]:
         asyncio.run(chat(options))
     else:
         asyncio.run(run_task(" ".join(args.task), options))
+
+
+def _slugify(text: str, max_words: int = 4) -> str:
+    import re
+
+    words = re.findall(r"[a-z0-9]+", text.lower())
+    return "_".join(words[:max_words]) or "analysis"
 
 
 def _print_message(message: object) -> None:

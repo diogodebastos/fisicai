@@ -71,6 +71,36 @@ or in any MCP client config:
 Your agent then has `inspire_search`, `arxiv_fetch`, `hepdata_get`,
 `hepdata_download_likelihood`, `pyhf_list_patches`, and `pyhf_cls`.
 
+## Analysis bundles: the code *and* the paper
+
+Research output isn't a chat answer — it's an analysis. `fisicai analyze` makes the agent
+deliver a complete, reproducible **analysis bundle**: the analysis code, every result as
+data, and a compiled LaTeX note.
+
+```console
+$ fisicai analyze "measure the Z boson mass in the Open Data dimuon skim"
+```
+
+produces:
+
+```
+analyses/<name>/
+├── analysis.py        # deterministic, runs end-to-end
+├── results/
+│   ├── results.json   # every number the note quotes
+│   └── results.tex    # auto-generated \newcommand macros (python -m fisicai.writeup)
+├── figures/*.pdf
+└── note/
+    ├── note.tex       # quotes numbers ONLY via the macros — no hand-typed values
+    ├── references.bib # every entry fetched from INSPIRE (inspire_bibtex tool)
+    └── note.pdf       # compiled with tectonic
+```
+
+The invariant: **the note cannot drift from the code.** Prose numbers come from generated
+macros; citations come from INSPIRE's own BibTeX; rerunning `analysis.py` regenerates the
+whole artifact. See [analyses/zmumu_z_mass](analyses/zmumu_z_mass) for a complete example
+produced by the agent.
+
 ## HEPAnalysisBench (HEPAbench)
 
 How do you trust an AI with physics? You score it against results that are already known.

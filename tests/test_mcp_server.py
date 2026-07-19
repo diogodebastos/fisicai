@@ -4,6 +4,7 @@ from fisicai.mcp_server import mcp
 
 EXPECTED_TOOLS = {
     "inspire_search",
+    "inspire_bibtex",
     "arxiv_fetch",
     "hepdata_get",
     "hepdata_download_likelihood",

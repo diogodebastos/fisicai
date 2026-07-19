@@ -51,3 +51,29 @@ def test_search_formats_hit():
 def test_search_no_results():
     text = search_inspire("gibberish", client=_mock_client({"hits": {"hits": []}}))
     assert "No INSPIRE-HEP results" in text
+
+
+BIBTEX = "@article{CMS:2023ktc,\n  collaboration = {CMS},\n  year = {2023}\n}"
+
+
+def test_fetch_bibtex_routes_arxiv_vs_recid():
+    from fisicai.tools.inspire import fetch_bibtex
+
+    def handler(request):
+        if "api/arxiv/" in str(request.url):
+            assert str(request.url.path).endswith("2301.08096")
+        else:
+            assert "api/literature/1748602" in str(request.url)
+        assert request.url.params["format"] == "bibtex"
+        return httpx.Response(200, text=BIBTEX)
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    assert fetch_bibtex("arXiv:2301.08096", client=client).startswith("@article")
+    assert fetch_bibtex("1748602", client=client).startswith("@article")
+
+
+def test_fetch_bibtex_missing():
+    from fisicai.tools.inspire import fetch_bibtex
+
+    client = httpx.Client(transport=httpx.MockTransport(lambda r: httpx.Response(404)))
+    assert "No INSPIRE record" in fetch_bibtex("999999999", client=client)
