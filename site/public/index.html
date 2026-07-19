@@ -169,6 +169,22 @@
   }
   .invariant b{font-style:normal}
 
+  /* generated-note page strip */
+  .pages{
+    display:flex;gap:1rem;overflow-x:auto;
+    padding:.4rem .2rem 1.1rem;
+    scroll-snap-type:x proximity;
+  }
+  .pages a{flex:none;scroll-snap-align:start;line-height:0}
+  .pages img{
+    width:232px;height:auto;background:#fff;
+    border:1px solid var(--rule);
+    box-shadow:0 10px 26px -14px rgba(25,22,33,.4);
+    transition:transform .15s ease,box-shadow .15s ease;
+  }
+  .pages a:hover img{transform:translateY(-3px);box-shadow:0 16px 32px -14px rgba(25,22,33,.5)}
+  .pass{color:#7ee787}
+
   /* booktabs table */
   .tablewrap{overflow-x:auto}
   .tablecaption{font-size:.9rem;color:var(--ink-soft);margin:1.6rem 0 .7rem;line-height:1.5}
@@ -335,7 +351,20 @@ analyses/zmumu_z_mass/
     └── note.pdf       <span class="c"># compiled with tectonic</span></pre>
       <p class="invariant"><b>The invariant:</b> the note cannot drift from the code. Prose numbers come from generated macros, citations come from INSPIRE's own BibTeX, and rerunning <code>analysis.py</code> regenerates the whole artifact.</p>
     </div>
+    <p style="margin-top:2rem">This is not a mock-up. Below is the actual note the agent produced for that command — selection cutflow, muon kinematics with the Jacobian peak, the Voigtian fit with per-bin pulls, a fit-range systematic scan, and INSPIRE-fetched references, over six pages.</p>
   </section>
+
+  <figure class="wrap-wide" aria-labelledby="fig2cap" style="margin-top:0">
+    <div class="pages">
+      <a href="paper/note.pdf"><img src="paper/page-1.png" alt="Note page 1: title, abstract, introduction" width="827" height="1170" loading="lazy"></a>
+      <a href="paper/note.pdf"><img src="paper/page-2.png" alt="Note page 2: event selection, cutflow table, muon kinematics figure" width="827" height="1170" loading="lazy"></a>
+      <a href="paper/note.pdf"><img src="paper/page-3.png" alt="Note page 3: analysis method, log-scale spectrum, systematic uncertainties" width="827" height="1170" loading="lazy"></a>
+      <a href="paper/note.pdf"><img src="paper/page-4.png" alt="Note page 4: fit-range variation table and scan figure" width="827" height="1170" loading="lazy"></a>
+      <a href="paper/note.pdf"><img src="paper/page-5.png" alt="Note page 5: results, dimuon mass fit with pulls" width="827" height="1170" loading="lazy"></a>
+      <a href="paper/note.pdf"><img src="paper/page-6.png" alt="Note page 6: summary and references" width="827" height="1170" loading="lazy"></a>
+    </div>
+    <figcaption id="fig2cap"><b>Figure 2:</b> the generated <a href="paper/note.pdf">note.pdf</a>, compiled from the <a href="https://github.com/diogodebastos/fisicai/tree/main/analyses/zmumu_z_mass">committed bundle</a>. Every quoted number is a generated macro; every figure is <code>mplhep</code>-styled and produced by <code>analysis.py</code>; every reference is INSPIRE's own BibTeX. Click any page to read the PDF.</figcaption>
+  </figure>
 
   <section class="wrap-wide" id="hepabench">
     <div class="wrap" style="padding:0">
@@ -359,7 +388,7 @@ analyses/zmumu_z_mass/
         </table>
         </div>
       </div>
-      <figure style="margin:0" aria-labelledby="fig2cap">
+      <figure style="margin:0" aria-labelledby="fig3cap">
         <svg viewBox="0 0 460 360" role="img" aria-label="CLs plot: observed value 0.24444 with the expected Brazil bands from the ATLAS SUSY-2018-31 published likelihood" font-family="Helvetica, Arial, sans-serif">
           <!-- plot frame -->
           <rect x="70" y="30" width="350" height="270" fill="#ffffff" stroke="none"/>
@@ -397,11 +426,20 @@ analyses/zmumu_z_mass/
           <text x="86" y="228" font-size="11.5" fill="#191621" font-weight="bold">Observed = 0.24444</text>
           <text x="86" y="190" font-size="11.5" fill="#191621">Expected (median)</text>
         </svg>
-        <figcaption id="fig2cap"><b>Figure 2:</b> the <code>atlas_multib_cls</code> task. Observed CLs against the expected ±1σ and ±2σ bands, every value computed by the agent from the search's published pyhf workspace.</figcaption>
+        <figcaption id="fig3cap"><b>Figure 3:</b> the <code>atlas_multib_cls</code> task. Observed CLs against the expected ±1σ and ±2σ bands, every value computed by the agent from the search's published pyhf workspace.</figcaption>
       </figure>
     </div>
     <div class="wrap" style="padding-top:1.6rem">
-      <p>Contributing a task is one YAML file: a prompt and a published reference value. Tasks that agents <em>fail</em> are the most valuable ones. <code>hepabench validate</code> goes further for full bundles — it reruns the analysis in a clean copy and requires an identical <code>results.json</code>, checks no number is hand-typed in the note, and compiles it from scratch.</p>
+      <p><code>hepabench validate</code> goes further for full bundles: it turns "the agent wrote a paper" into "the agent wrote a <em>reproducible</em> paper". It reruns <code>analysis.py</code> in a clean copy and requires an identical <code>results.json</code>, checks that no result is hand-typed in the note, that every citation resolves, and that the note compiles from scratch. The note shown in Figure&nbsp;2 passes all six checks:</p>
+      <pre class="term"><span class="p">$</span> hepabench validate analyses/zmumu_z_mass
+  [<span class="pass">PASS</span>] files: ok
+  [<span class="pass">PASS</span>] reproducible: identical
+  [<span class="pass">PASS</span>] macros_in_sync: in sync
+  [<span class="pass">PASS</span>] no_raw_numbers: clean
+  [<span class="pass">PASS</span>] citations: ok
+  [<span class="pass">PASS</span>] compiles: ok
+  bundle score: <span class="pass">1.000</span></pre>
+      <p style="margin-top:1.4rem">Contributing a task is one YAML file: a prompt and a published reference value. Tasks that agents <em>fail</em> are the most valuable ones.</p>
     </div>
   </section>
 

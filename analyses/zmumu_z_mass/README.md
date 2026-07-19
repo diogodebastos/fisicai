@@ -24,8 +24,11 @@ analysis.py        # full analysis: selection, histogram, Voigtian+exp fit
 results/
   results.json     # every number the note quotes
   results.tex      # generated LaTeX macros (do not edit by hand)
-figures/
-  dimuon_mass.pdf  # dimuon mass spectrum with fit (produced by analysis.py)
+figures/               # all produced by analysis.py
+  dimuon_mass.pdf      # mass spectrum with fit and per-bin pulls
+  dimuon_mass_log.pdf  # full-window spectrum, log scale, fit range marked
+  muon_kinematics.pdf  # muon pt (Jacobian peak) and eta after selection
+  fit_range_scan.pdf   # fitted peak vs fit range, assigned syst band
 note/
   note.tex         # analysis note (quotes numbers only via results.tex macros)
   references.bib   # fetched from INSPIRE-HEP via inspire_bibtex
@@ -39,7 +42,7 @@ From this directory, using a Python environment with the Scikit-HEP stack
 (e.g. the repo venv, `/Users/ketchum/REPOS/fisicai/.venv/bin/python`):
 
 ```sh
-# 1. Run the analysis: writes results/results.json and figures/dimuon_mass.pdf.
+# 1. Run the analysis: writes results/results.json and the figures/ directory.
 #    Deterministic — no randomness; running twice gives identical output.
 python analysis.py            # or: python analysis.py --data /path/to/zmumu_skim.root
 

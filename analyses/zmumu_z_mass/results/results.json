@@ -21,6 +21,33 @@
   "chi2": "25.1",
   "ndf": 19,
   "chi2_ndf": "1.32",
+  "max_abs_pull": "2.3",
+  "n_bins_check": 240,
+  "binning_check_shift_mev": "+2",
+  "var_a": {
+    "lo": "80",
+    "hi": "100",
+    "peak": "90.880",
+    "peak_stat": "0.036",
+    "shift_mev": "-122",
+    "chi2_ndf": "2.48"
+  },
+  "var_b": {
+    "lo": "83",
+    "hi": "99",
+    "peak": "90.926",
+    "peak_stat": "0.037",
+    "shift_mev": "-77",
+    "chi2_ndf": "2.17"
+  },
+  "var_c": {
+    "lo": "86",
+    "hi": "96",
+    "peak": "91.011",
+    "peak_stat": "0.046",
+    "shift_mev": "+8",
+    "chi2_ndf": "1.53"
+  },
   "gamma_z_pdg": "2.4955",
   "m_z_pdg": "91.1880",
   "m_z_pdg_err": "0.0020",

@@ -73,6 +73,22 @@ muons, and the spectrum is analyzed in the
 $\MassWindowLo \le \mmumu < \MassWindowHi\GeV$ window. The cutflow is given in
 Table~\ref{tab:cutflow}.
 
+The kinematics of the selected muons are shown in
+Fig.~\ref{fig:muon_kinematics}. Both muon \pt spectra exhibit the Jacobian peak
+near $m_{\mathrm{Z}}/2$ expected for the two-body decay of a resonance produced
+close to rest, and the pseudorapidity distribution is central and symmetric ---
+both as expected for \Zmm, giving confidence that the selection isolates the
+intended process.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/muon_kinematics.pdf}
+  \caption{Kinematics of the muons after the full selection: \pt of the
+    leading and subleading muon (left), showing the Jacobian peak near
+    $m_{\mathrm{Z}}/2$, and pseudorapidity of all selected muons (right).}
+  \label{fig:muon_kinematics}
+\end{figure}
+
 \begin{table}[htbp]
   \centering
   \caption{Event selection and yields. Raw (unweighted) event counts.}
@@ -106,15 +122,66 @@ $\Gamma_{\mathrm{Z}} = \GammaZPdg\GeV$ \cite{ParticleDataGroup:2024cfk}, while
 the peak position $\mu$, the resolution $\sigma$, the two yields, and the
 background slope are floated. The nominal fit uses the $\FitLo$--$\FitHi\GeV$
 core of the peak, excluding the low-mass tail populated by final-state
-radiation (FSR), which the symmetric Voigtian does not model.
+radiation (FSR), which the symmetric Voigtian does not model. The full-window
+spectrum on a logarithmic scale, with the fit range indicated, is shown in
+Fig.~\ref{fig:dimuon_mass_log}: the FSR tail below the fit range and the
+smoothly falling continuum on both sides are clearly visible.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\textwidth]{../figures/dimuon_mass_log.pdf}
+  \caption{Dimuon invariant-mass spectrum over the full
+    $\MassWindowLo$--$\MassWindowHi\GeV$ window on a logarithmic scale. The
+    shaded band marks the nominal $\FitLo$--$\FitHi\GeV$ fit range; the
+    low-mass shoulder excluded from the fit is populated by FSR.}
+  \label{fig:dimuon_mass_log}
+\end{figure}
 
 \section{Systematic uncertainties}
 
 The only systematic uncertainty that is evaluated is the sensitivity of the
 peak position to the choice of fit range: the fit is repeated with three
-alternative ranges ($80$--$100$, $83$--$99$, and $86$--$96\GeV$, as defined in
-\texttt{analysis.py}), and the largest absolute shift of the fitted peak,
-$\MZPeakSystRange\GeV$, is taken as the uncertainty.
+alternative ranges, and the largest absolute shift of the fitted peak,
+$\MZPeakSystRange\GeV$, is taken as the uncertainty. The variations are
+summarized in Table~\ref{tab:fitvar} and visualized in
+Fig.~\ref{fig:fit_range_scan}; the assigned uncertainty covers all three
+alternative results. The widest range, $\VarALo$--$\VarAHi\GeV$, reaches into
+the FSR shoulder that the symmetric Voigtian does not model, which both pulls
+the peak down and degrades the fit quality --- the behaviour that motivates the
+choice of the narrower nominal range.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Fit-range variations. The shift is quoted with respect to the
+    nominal fitted peak position.}
+  \label{tab:fitvar}
+  \begin{tabular}{lccc}
+    \toprule
+    Fit range [GeV] & $\mmumu^{\text{peak}}$ [GeV] & Shift [MeV] & $\chi^{2}/\text{ndf}$ \\
+    \midrule
+    $\FitLo$--$\FitHi$ (nominal) & $\MZPeak \pm \MZPeakStat$ & --- & \ChiTwoNdf \\
+    $\VarALo$--$\VarAHi$ & $\VarAPeak \pm \VarAPeakStat$ & $\VarAShiftMev$ & \VarAChiTwoNdf \\
+    $\VarBLo$--$\VarBHi$ & $\VarBPeak \pm \VarBPeakStat$ & $\VarBShiftMev$ & \VarBChiTwoNdf \\
+    $\VarCLo$--$\VarCHi$ & $\VarCPeak \pm \VarCPeakStat$ & $\VarCShiftMev$ & \VarCChiTwoNdf \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\textwidth]{../figures/fit_range_scan.pdf}
+  \caption{Fitted peak position for the nominal and alternative fit ranges,
+    with statistical uncertainties. The band is the assigned fit-range
+    systematic uncertainty; the dotted line marks the world-average Z-boson
+    mass, from which the uncorrected reconstructed peak is expected to
+    deviate.}
+  \label{fig:fit_range_scan}
+\end{figure}
+
+As a cross-check of the histogramming choice, the nominal fit is repeated with
+half the bin width (\NBinsCheck{} bins): the peak moves by
+$\BinningCheckShiftMev\MeV$, negligible compared with the statistical
+uncertainty, and no additional uncertainty is assigned.
 
 The following are explicitly \emph{not} evaluated: the muon momentum-scale and
 resolution calibration (the dominant systematic in a genuine Z mass
@@ -134,15 +201,19 @@ and yields
 \end{equation}
 with a Gaussian resolution $\sigma = \SigmaRes \pm \SigmaResStat\GeV$ and fitted
 yields of $\NSigFit \pm \NSigFitStat$ signal and \NBkgFit{} background events in
-the fit range. The spectrum and fit are shown in Fig.~\ref{fig:dimuon_mass}.
+the fit range. The spectrum and fit are shown in Fig.~\ref{fig:dimuon_mass},
+together with the per-bin pulls: no structure is visible across the fit range
+and the largest pull is $\MaxAbsPull\,\sigma$, consistent with the quoted
+$\chi^{2}/\text{ndf}$.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.72\textwidth]{../figures/dimuon_mass.pdf}
-  \caption{Dimuon invariant-mass spectrum after the full selection (points with
-    statistical uncertainties), with the Voigtian-plus-exponential fit in the
-    $\FitLo$--$\FitHi\GeV$ range (solid line) and its background component
-    (dashed line).}
+  \caption{Top: dimuon invariant-mass spectrum after the full selection (points
+    with statistical uncertainties), with the Voigtian-plus-exponential fit in
+    the $\FitLo$--$\FitHi\GeV$ range (solid line) and its background component
+    (dashed line). Bottom: per-bin pulls of the fit; the dotted lines mark
+    $\pm 2\sigma$.}
   \label{fig:dimuon_mass}
 \end{figure}
 
