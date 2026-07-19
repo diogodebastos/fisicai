@@ -9,7 +9,7 @@ name: Deploy site
 on:
   push:
     branches: [main]
-    paths: ["site/**"]
+    paths: ["site/**", ".github/workflows/deploy-site.yml"]
   workflow_dispatch:
 
 jobs:
@@ -24,3 +24,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: site
+          wranglerVersion: "4.112.0"
