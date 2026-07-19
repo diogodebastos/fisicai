@@ -19,3 +19,14 @@ jobs:
       - run: pip install -e ".[dev]"
       - run: ruff check .
       - run: pytest -q
+      - name: Score recorded HEPAbench answers
+        run: |
+          for d in hepabench_results/*/; do
+            hepabench score "$(basename "$d")" "$d/answer.json"
+          done
+      - name: Install tectonic
+        run: |
+          curl --proto '=https' --tlsv1.2 -fsSL https://drop-sh.fullyjustified.net | sh
+          sudo mv tectonic /usr/local/bin/
+      - name: Validate the shipped analysis bundle
+        run: hepabench validate analyses/zmumu_z_mass
