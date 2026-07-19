@@ -9,8 +9,9 @@ Usage:
     python -m fisicai.writeup results/results.json > results/results.tex
 
 Keys map to macro names by CamelCasing: ``m_z_peak`` -> ``\\MZPeak``. Nested objects
-flatten with their path: ``{"cls": {"observed": ...}}`` -> ``\\ClsObserved``. Floats are
-formatted to 4 significant digits; use a string value to control formatting exactly.
+flatten with their path: ``{"cls": {"observed": ...}}`` -> ``\\ClsObserved``. Values are
+rendered exactly as stored — round numbers to the intended precision in ``analysis.py``
+(or store them as strings), never here.
 """
 
 import argparse
@@ -36,7 +37,7 @@ def format_value(value: Any) -> str:
     if isinstance(value, int):
         return str(value)
     if isinstance(value, float):
-        return f"{value:.4g}"
+        return repr(value)  # shortest exact representation — no silent rounding
     return str(value)
 
 

@@ -23,10 +23,9 @@ from scipy.special import voigt_profile
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-DEFAULT_DATA = (
-    "/Users/ketchum/REPOS/fisicai/src/fisicai/hepabench/data/"
-    "opendata_zmumu/zmumu_skim.root"
-)
+from fisicai.hepabench import DATA_DIR  # noqa: E402  (skim ships with the package)
+
+DEFAULT_DATA = str(DATA_DIR / "opendata_zmumu" / "zmumu_skim.root")
 
 # Selection
 PT_MIN = 20.0  # GeV

@@ -29,6 +29,13 @@ def main() -> None:
     p_score.add_argument("task_id")
     p_score.add_argument("answer_file")
 
+    p_val = sub.add_parser(
+        "validate", help="Validate an analysis bundle: reproducibility, macros, citations."
+    )
+    p_val.add_argument("bundle_dir")
+    p_val.add_argument("--no-run", action="store_true", help="Skip rerunning analysis.py.")
+    p_val.add_argument("--no-compile", action="store_true", help="Skip the tectonic compile.")
+
     p_run = sub.add_parser("run", help="Run tasks with the fisicai agent and score them.")
     p_run.add_argument("task_ids", nargs="*", help="Tasks to run (default: all).")
     p_run.add_argument("--model", default=None)
@@ -53,6 +60,18 @@ def main() -> None:
         answer = json.loads(Path(args.answer_file).read_text())
         checks = score_answer(task, answer)
         _print_checks(task, checks)
+        sys.exit(0 if all(c.passed for c in checks) else 1)
+
+    if args.command == "validate":
+        from fisicai.hepabench.bundle import validate_bundle
+
+        checks = validate_bundle(
+            args.bundle_dir, run=not args.no_run, compile_pdf=not args.no_compile
+        )
+        print(f"Bundle {args.bundle_dir}:")
+        for c in checks:
+            mark = "PASS" if c.passed else "FAIL"
+            print(f"  [{mark}] {c.key}: {c.got}")
         sys.exit(0 if all(c.passed for c in checks) else 1)
 
     if args.command == "run":

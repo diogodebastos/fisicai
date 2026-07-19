@@ -113,7 +113,14 @@ $ hepabench list
 $ hepabench run --offline        # tasks that need no network
 $ hepabench run                  # the full suite, driven by the fisicai agent
 $ hepabench score toy_cls answer.json   # score any agent's answer
+$ hepabench validate analyses/zmumu_z_mass   # validate an analysis bundle
 ```
+
+`hepabench validate` turns "the agent wrote a paper" into "the agent wrote a
+*reproducible* paper": it reruns `analysis.py` in a clean copy and requires an identical
+`results.json`, checks that `results.tex` regenerates from it, that no result value is
+hand-typed in the note, that every citation resolves, and that the note compiles from
+scratch. The shipped Z-mass bundle passes all six checks.
 
 Current v0 suite — the fisicai agent scores **4/4**:
 
