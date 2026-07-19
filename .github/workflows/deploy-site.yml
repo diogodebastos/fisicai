@@ -1,0 +1,26 @@
+name: Deploy site
+
+# Deploys site/ to Cloudflare Workers (https://fisicai.diogobastos.workers.dev)
+# whenever it changes on main.
+# One-time setup: create an API token at dash.cloudflare.com/profile/api-tokens
+# (template "Edit Cloudflare Workers"), then add it as the repo secret
+# CLOUDFLARE_API_TOKEN.
+
+on:
+  push:
+    branches: [main]
+    paths: ["site/**"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy with wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: site

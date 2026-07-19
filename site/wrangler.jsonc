@@ -1,0 +1,9 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fisicai",
+  "account_id": "d79b18ec32e822409d63c580c1d1d202",
+  "compatibility_date": "2026-07-19",
+  "assets": {
+    "directory": "./public"
+  }
+}
