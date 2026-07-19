@@ -1,5 +1,8 @@
 # fisicai
 
+[![CI](https://github.com/diogodebastos/fisicai/actions/workflows/ci.yml/badge.svg)](https://github.com/diogodebastos/fisicai/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 **An open-source agentic harness for high-energy physics.**
 
 fisicai gives an AI agent the tools a particle physicist actually uses: the INSPIRE-HEP
@@ -11,6 +14,12 @@ papers. It reinterprets them.
 $ fisicai "download the pyhf likelihood for the ATLAS sbottom 1Lbb search and \
            compute the CLs exclusion for the (600, 280, 150) GeV signal point"
 ```
+
+<img src="docs/demo.svg" alt="fisicai reinterpreting the ATLAS sbottom multi-b search from its published likelihood: the agent chains inspire_search, hepdata_get, hepdata_download_likelihood, pyhf_list_patches, pyhf_cls and reproduces the published CLs of 0.24444 exactly" width="820">
+
+*A real session ([full walkthrough](examples/reinterpret_sbottom.md)): the agent fetches
+the ATLAS SUSY-2018-31 published likelihood and reproduces its CLs to all published
+digits — from the analysis's own statistical model, not a digitized curve.*
 
 ## Why
 
@@ -134,8 +143,14 @@ Current v0 suite — the fisicai agent scores **4/4**:
 The `opendata_zmumu` skim ships with the package (3.7 MB, regenerable from CERN Open Data
 with `scripts/make_zmumu_skim.py`), so that task runs offline on a laptop.
 
+The recorded agent answers behind this table are committed under
+[hepabench_results/](hepabench_results) and re-scored on every push in CI, which also
+runs the full bundle validation — the claims above are continuously verified, not
+prose.
+
 Contributing a task = one YAML file with a prompt and a published reference value
-(`src/fisicai/hepabench/tasks/`). Tasks that agents fail are the most valuable ones.
+(`src/fisicai/hepabench/tasks/`) — see [CONTRIBUTING.md](CONTRIBUTING.md). Tasks that
+agents fail are the most valuable ones.
 
 ## Roadmap
 
@@ -161,7 +176,9 @@ making today's analyses fast, reproducible, and reinterpretable.
 
 Issues and PRs welcome — especially new skills, support for more published-likelihood
 formats, and reports of analyses the agent gets wrong. Physics correctness bugs are the
-highest-value contributions.
+highest-value contributions ([there's an issue template for them](.github/ISSUE_TEMPLATE/physics-correctness-bug.md)).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for dev setup and the HEPAbench task-authoring
+guide.
 
 ## License
 

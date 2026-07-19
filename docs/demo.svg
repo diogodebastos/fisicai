@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="400" viewBox="0 0 820 400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14">
+  <defs>
+    <clipPath id="frame"><rect x="0" y="0" width="820" height="400" rx="10"/></clipPath>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="820" height="400" fill="#0d1117"/>
+    <rect width="820" height="36" fill="#161b22"/>
+    <circle cx="20" cy="18" r="6" fill="#ff5f57"/>
+    <circle cx="40" cy="18" r="6" fill="#febc2e"/>
+    <circle cx="60" cy="18" r="6" fill="#28c840"/>
+    <text x="410" y="23" text-anchor="middle" fill="#8b949e" font-size="12">fisicai — reinterpreting an ATLAS search from its published likelihood</text>
+
+    <text x="24" y="66" fill="#e6edf3"><tspan fill="#7ee787">$</tspan> fisicai <tspan fill="#a5d6ff">"Download the published pyhf likelihood of the ATLAS sbottom</tspan></text>
+    <text x="24" y="86" fill="#a5d6ff">           multi-b search (INSPIRE 1748602) and compute the observed and</text>
+    <text x="24" y="106" fill="#a5d6ff">           expected CLs for the sbottom_1300_205_60 signal point in Region A."</text>
+
+    <text x="24" y="140" fill="#8b949e">  ⚛ inspire_search</text>
+    <text x="24" y="162" fill="#8b949e">  ⚛ hepdata_get</text>
+    <text x="24" y="184" fill="#8b949e">  ⚛ hepdata_download_likelihood</text>
+    <text x="24" y="206" fill="#8b949e">  ⚛ pyhf_list_patches</text>
+    <text x="24" y="228" fill="#8b949e">  ⚛ pyhf_cls</text>
+
+    <text x="24" y="264" fill="#e6edf3">Workspace: sbottom_multib/RegionA/BkgOnly.json + patch 'sbottom_1300_205_60'</text>
+    <text x="24" y="286" fill="#e6edf3">CLs observed = <tspan fill="#7ee787" font-weight="bold">0.24444</tspan>  -&gt; not excluded at 95% CL</text>
+    <text x="24" y="308" fill="#e6edf3">CLs expected (-2σ, -1σ, med, +1σ, +2σ) = 0.09022, 0.19378, 0.38432, 0.65577, 0.89104</text>
+
+    <text x="24" y="344" fill="#d29922">✓ matches the reference from the analysis's own published statistical model</text>
+    <text x="24" y="364" fill="#d29922">  (0.2444362776, pyhf docs) — not a digitized curve</text>
+  </g>
+</svg>
