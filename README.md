@@ -85,8 +85,17 @@ $ hepabench run                  # the full suite, driven by the fisicai agent
 $ hepabench score toy_cls answer.json   # score any agent's answer
 ```
 
-Current v0 suite (3 tasks: toy CLs fit, INSPIRE retrieval, ATLAS SUSY-2018-31 CLs
-reproduction): the fisicai agent scores **3/3**.
+Current v0 suite — the fisicai agent scores **4/4**:
+
+| Task | Reference | Agent result |
+|---|---|---|
+| `toy_cls` — CLs fit on a toy workspace | 0.0525 (pyhf docs) | 0.05251 |
+| `literature_stop_4body` — INSPIRE retrieval | arXiv:2301.08096 | exact |
+| `atlas_multib_cls` — CLs from the ATLAS SUSY-2018-31 published likelihood | 0.24444 | 0.24444 |
+| `opendata_zmumu` — Z mass from real CMS 2012 collision data | 91.1876 GeV (PDG) | 90.95 GeV |
+
+The `opendata_zmumu` skim ships with the package (3.7 MB, regenerable from CERN Open Data
+with `scripts/make_zmumu_skim.py`), so that task runs offline on a laptop.
 
 Contributing a task = one YAML file with a prompt and a published reference value
 (`src/fisicai/hepabench/tasks/`). Tasks that agents fail are the most valuable ones.

@@ -1,0 +1,17 @@
+id: opendata_zmumu
+title: Measure the Z boson mass in CMS Open Data dimuons (offline)
+network: false
+assets: opendata_zmumu
+tags: [opendata, cms, cutflow, uproot, offline]
+prompt: |
+  The file zmumu_skim.root in your working directory contains real CMS collision data:
+  a skim of the 2012 DoubleMuParked dataset (CERN Open Data, AOD2NanoAODOutreachTool
+  derived format) with jagged muon branches Muon_pt, Muon_eta, Muon_phi, Muon_mass,
+  Muon_charge (pt/mass in GeV).
+
+  Select events with exactly two opposite-charge muons, each with pt > 20 GeV and
+  |eta| < 2.4. Compute the dimuon invariant mass and measure the position of the
+  Z boson resonance peak in the 60-120 GeV window, in GeV.
+answer_keys: [m_z_peak]
+reference:
+  m_z_peak: {value: 91.1876, abs_tol: 1.5}
